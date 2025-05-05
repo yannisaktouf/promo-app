@@ -1,13 +1,18 @@
-// app.js
+// server.js 
 
-const express           = require('express');
-const cors              = require('cors');
-const promosRoutes      = require('./routes/promos');
-const intervenantsRoutes= require('./routes/intervenants');
-const mailRoutes        = require('./routes/email');
+const express            = require('express');
+const cors               = require('cors');
+const promosRoutes       = require('./routes/promos');
+const intervenantsRoutes = require('./routes/intervenants');
+const mailRoutes         = require('./routes/email');
 
 const app = express();
-app.use(cors());
+
+// Optionnel : restreindre le CORS à ton front en prod
+// Définis FRONTEND_URL dans Netlify (ou en local laisse la valeur par défaut)
+const FRONTEND_URL = process.env.FRONTEND_URL || '*';
+app.use(cors({ origin: FRONTEND_URL }));
+
 app.use(express.json());
 
 // Monter en premier vos routes métier
@@ -20,7 +25,8 @@ app.get('/', (req, res) => {
   res.send('API is running!');
 });
 
-const PORT = 3000;
+// Utilise process.env.PORT en prod, sinon 3000 en local
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`API démarrée sur http://localhost:${PORT}`);
 });
