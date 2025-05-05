@@ -1,12 +1,17 @@
+// db.js
 const { Pool } = require('pg');
 
-// Crée une nouvelle connexion à PostgreSQL
+// Si DATABASE_URL est défini (en prod sur Railway), on l’utilise,
+// sinon on tombe sur ta config locale.
+const connectionString = process.env.DATABASE_URL || 
+  'postgres://postgres:123456@localhost:5432/Workflow_Promo';
+
 const pool = new Pool({
-    user: 'postgres',      
-    host: 'localhost',
-    database: 'Workflow_Promo',    
-    password: '123456', 
-    port: 5432,                 
+  connectionString,
+
+  ssl: process.env.DATABASE_URL 
+    ? { rejectUnauthorized: false } 
+    : false,
 });
 
 module.exports = pool;
